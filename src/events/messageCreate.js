@@ -48,17 +48,20 @@ export default {
       );
     }
 
-    // !rank command
-    if (message.content === '!rank') {
+  if (message.content === '!rank') {
 
-      const data = global.xpData[userId];
+  // ONLY WORK IN THIS CHANNEL
+  const allowedChannel = '1508480415382372412';
 
-      message.reply(
-        `🏆 Level: ${data.level}\n⭐ XP: ${data.xp}/${data.level * 100}`
-      );
-    }
-
+  if (message.channel.id !== allowedChannel) {
+    return;
   }
+
+  const data = global.xpData[userId];
+
+  message.reply(
+    `🏆 Level: ${data.level}\n⭐ XP: ${data.xp}/${data.level * 100}`
+  );
 }
 
 
