@@ -15,59 +15,73 @@ const MESSAGE_XP_RATE_LIMIT_WINDOW_MS = 10000;
 export default {
   name: 'messageCreate',
   async execute(message) {
-    if (message.author.bot) return;
+    const { Client, GatewayIntentBits } = require('discord.js');
+const { QuickDB } = require('quick.db');
 
-    // SIMPLE XP SYSTEM
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
 
-    // create xp if doesn't exist
-    if (!global.xpData) global.xpData = {};
+const db = new QuickDB();
 
-    const userId = message.author.id;
+client.on('messageCreate', async (message) => {
 
-    if (!global.xpData[userId]) {
-      global.xpData[userId] = {
-        xp: 0,
-        level: 1
-      };
-    }
+  if (message.author.bot) return;
 
-    // add xp
-    global.xpData[userId].xp += 10;
-
-    // level up
-    const neededXP = global.xpData[userId].level * 100;
-
-    if (global.xpData[userId].xp >= neededXP) {
-
-      global.xpData[userId].xp = 0;
-      global.xpData[userId].level++;
-
-      message.channel.send(
-        `${message.author} leveled up to level ${global.xpData[userId].level}! 🎉`
-      );
-    }
-
-    // !rank command
-if (message.content === '!rank') {
-
-  // YOUR CHANNEL ID
-  const allowedChannel = '1508473014562590831';
-
-  // Block command outside the channel
-  if (message.channel.id !== 1508473014562590831) {
-    return;
-  }
-
+  // ADD XP
   let xp = await db.get(`xp_${message.guild.id}_${message.author.id}`);
-  let level = await db.get(`level_${message.guild.id}_${message.author.id}`);
-
   if (!xp) xp = 0;
+
+  xp += 10;
+
+  await db.set(`xp_${message.guild.id}_${message.author.id}`, xp);
+
+  // LEVEL SYSTEM
+  let level = await db.get(`level_${message.guild.id}_${message.author.id}`);
   if (!level) level = 1;
 
-  message.reply(
-    `🏆 Level: ${level}\n⭐ XP: ${xp}/${level * 100}`
-  );
-}
+  let neededXP = level * 100;
+
+  // LEVEL UP
+  if (xp >= neededXP) {
+
+    level++;
+
+    await db.set(`level_${message.guild.id}_${message.author.id}`, level);
+    await db.set(`xp_${message.guild.id}_${message.author.id}`, 0);
+
+    message.channel.send(
+      `${message.author} leveled up to level ${level}! 🎉`
+    );
+  }
+
+  // !RANK COMMAND
+  if (message.content === '!rank') {
+
+    // ALLOWED CHANNEL ID
+    const allowedChannel = '1395849203948503040';
+
+    // ONLY WORKS IN THIS CHANNEL
+    if (message.channel.id !== allowedChannel) return;
+
+    let xp = await db.get(`xp_${message.guild.id}_${message.author.id}`);
+    let level = await db.get(`level_${message.guild.id}_${message.author.id}`);
+
+    if (!xp) xp = 0;
+    if (!level) level = 1;
+
+    message.reply(
+      `🏆 Level: ${level}\n⭐ XP: ${xp}/${level * 100}`
+    );
+  }
+
+});
+
+client.login('YOUR_BOT_TOKEN');
 async function handleLeveling(message, client) {
   try {
     const rateLimitKey = `xp-event:${message.guild.id}:${message.author.id}`;
