@@ -13,40 +13,7 @@ const MESSAGE_XP_RATE_LIMIT_ATTEMPTS = 12;
 const MESSAGE_XP_RATE_LIMIT_WINDOW_MS = 10000;
 
 export default {
-  name: 'messageCreate',
-  async execute(message) {
-
-    if (message.author.bot) return;
-
-    // SIMPLE XP SYSTEM
-
-    // create xp if doesn't exist
-    if (!global.xpData) global.xpData = {};
-
-    const userId = message.author.id;
-
-    if (!global.xpData[userId]) {
-      global.xpData[userId] = {
-        xp: 0,
-        level: 1
-      };
-    }
-
-    // add xp
-    global.xpData[userId].xp += 10;
-
-    // level up
-    const neededXP = global.xpData[userId].level * 100;
-
-    if (global.xpData[userId].xp >= neededXP) {
-
-      global.xpData[userId].xp = 0;
-      global.xpData[userId].level++;
-
-      message.channel.send(
-        `${message.author} leveled up to level ${global.xpData[userId].level}! 🎉`
-      );
-    }
+  name: 'messageCreate'
 
   if (message.content === '!rank') {
 
