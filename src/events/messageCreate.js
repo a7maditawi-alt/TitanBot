@@ -51,7 +51,7 @@ export default {
 if (message.content === '!rank') {
 
   // YOUR CHANNEL ID
-  const allowedChannel = '1395849203948503040';
+  const allowedChannel = '1508473014562590831';
 
   // Block command outside the channel
   if (message.channel.id !== allowedChannel) {
