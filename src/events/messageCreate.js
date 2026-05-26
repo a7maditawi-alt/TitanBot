@@ -53,7 +53,7 @@ if (message.content === '!rank') {
     // ONLY ALLOW THIS CHANNEL
     const allowedChannel = '1508473014562590831';
 
-    if (message.channel.id !== allowedChannel) {
+    if (message.channel.id !== 1508473014562590831) {
         return;
     }
 
