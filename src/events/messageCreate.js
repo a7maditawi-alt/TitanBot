@@ -61,7 +61,6 @@ export default {
   }
 }
 
-client.login('YOUR_BOT_TOKEN');
 async function handleLeveling(message, client) {
   try {
     const rateLimitKey = `xp-event:${message.guild.id}:${message.author.id}`;
