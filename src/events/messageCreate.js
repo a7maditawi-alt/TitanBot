@@ -49,10 +49,16 @@ export default {
     }
 
     // !rank command
-    if (message.content === '!rank') {
+if (message.content === '!rank') {
 
-      const data = global.xpData[userId];
+    // ONLY ALLOW THIS CHANNEL
+    const allowedChannel = 'PUT_CHANNEL_ID_HERE';
 
+    if (message.channel.id !== allowedChannel) {
+        return;
+    }
+
+    const data = global.xpData[userId];
       message.reply(
         `🏆 Level: ${data.level}\n⭐ XP: ${data.xp}/${data.level * 100}`
       );
