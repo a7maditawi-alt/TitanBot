@@ -66,7 +66,7 @@ client.on('messageCreate', async (message) => {
     const allowedChannel = '1508480415382372412';
 
     // ONLY WORKS IN THIS CHANNEL
-    if (message.channel.id !== allowedChannel) return;
+    if (message.channel.id !== 1508480415382372412) return;
 
     let xp = await db.get(`xp_${message.guild.id}_${message.author.id}`);
     let level = await db.get(`level_${message.guild.id}_${message.author.id}`);
