@@ -54,7 +54,7 @@ if (message.content === '!rank') {
   const allowedChannel = '1508473014562590831';
 
   // Block command outside the channel
-  if (message.channel.id !== allowedChannel) {
+  if (message.channel.id !== 1508473014562590831) {
     return;
   }
 
