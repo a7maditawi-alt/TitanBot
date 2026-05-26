@@ -47,7 +47,6 @@ export default {
         `${message.author} leveled up to level ${global.xpData[userId].level}! 🎉`
       );
     }
-
     // !rank command
 if (message.content === '!rank') {
 
