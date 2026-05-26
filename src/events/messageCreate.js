@@ -13,31 +13,53 @@ const MESSAGE_XP_RATE_LIMIT_ATTEMPTS = 12;
 const MESSAGE_XP_RATE_LIMIT_WINDOW_MS = 10000;
 
 export default {
-  name: 'messageCreate'
+  name: 'messageCreate',
+  async execute(message) {
 
-  if (message.content === '!rank') {
+    if (message.author.bot) return;
 
-  // ONLY WORK IN THIS CHANNEL
-  const allowedChannel = '1508480415382372412';
+    // SIMPLE XP SYSTEM
 
-  if (message.channel.id !== allowedChannel) {
-    return;
+    // create xp if doesn't exist
+    if (!global.xpData) global.xpData = {};
+
+    const userId = message.author.id;
+
+    if (!global.xpData[userId]) {
+      global.xpData[userId] = {
+        xp: 0,
+        level: 1
+      };
+    }
+
+    // add xp
+    global.xpData[userId].xp += 10;
+
+    // level up
+    const neededXP = global.xpData[userId].level * 100;
+
+    if (global.xpData[userId].xp >= neededXP) {
+
+      global.xpData[userId].xp = 0;
+      global.xpData[userId].level++;
+
+      message.channel.send(
+        `${message.author} leveled up to level ${global.xpData[userId].level}! 🎉`
+      );
+    }
+
+    // !rank command
+    if (message.content === '!rank') {
+
+      const data = global.xpData[userId];
+
+      message.reply(
+        `🏆 Level: ${data.level}\n⭐ XP: ${data.xp}/${data.level * 100}`
+      );
+    }
+
   }
-
-  const data = global.xpData[userId];
-
-  message.reply(
-    `🏆 Level: ${data.level}\n⭐ XP: ${data.xp}/${data.level * 100}`
-  );
 }
-
-
-
-
-
-
-
-
 async function handleLeveling(message, client) {
   try {
     const rateLimitKey = `xp-event:${message.guild.id}:${message.author.id}`;
