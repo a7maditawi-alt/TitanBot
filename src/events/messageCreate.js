@@ -63,7 +63,7 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!rank') {
 
     // ALLOWED CHANNEL ID
-    const allowedChannel = '1395849203948503040';
+    const allowedChannel = '1508480415382372412';
 
     // ONLY WORKS IN THIS CHANNEL
     if (message.channel.id !== allowedChannel) return;
