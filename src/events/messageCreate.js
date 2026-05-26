@@ -52,7 +52,7 @@ export default {
 if (message.content === '!rank') {
 
     // ONLY ALLOW THIS CHANNEL
-    const allowedChannel = 'PUT_CHANNEL_ID_HERE';
+    const allowedChannel = '1508473014562590831';
 
     if (message.channel.id !== allowedChannel) {
         return;
