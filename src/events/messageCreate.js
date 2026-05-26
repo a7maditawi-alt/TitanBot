@@ -15,7 +15,6 @@ const MESSAGE_XP_RATE_LIMIT_WINDOW_MS = 10000;
 export default {
   name: 'messageCreate',
   async execute(message) {
-
     if (message.author.bot) return;
 
     // SIMPLE XP SYSTEM
@@ -47,23 +46,27 @@ export default {
         `${message.author} leveled up to level ${global.xpData[userId].level}! 🎉`
       );
     }
+
     // !rank command
 if (message.content === '!rank') {
 
-    // ONLY ALLOW THIS CHANNEL
-    const allowedChannel = '1508473014562590831';
+  // YOUR CHANNEL ID
+  const allowedChannel = '1395849203948503040';
 
-    if (message.channel.id !== 1508473014562590831) {
-        return;
-    }
-
-    const data = global.xpData[userId];
-      message.reply(
-        `🏆 Level: ${data.level}\n⭐ XP: ${data.xp}/${data.level * 100}`
-      );
-    }
-
+  // Block command outside the channel
+  if (message.channel.id !== allowedChannel) {
+    return;
   }
+
+  let xp = await db.get(`xp_${message.guild.id}_${message.author.id}`);
+  let level = await db.get(`level_${message.guild.id}_${message.author.id}`);
+
+  if (!xp) xp = 0;
+  if (!level) level = 1;
+
+  message.reply(
+    `🏆 Level: ${level}\n⭐ XP: ${xp}/${level * 100}`
+  );
 }
 async function handleLeveling(message, client) {
   try {
